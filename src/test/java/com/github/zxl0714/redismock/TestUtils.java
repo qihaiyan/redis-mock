@@ -1,15 +1,12 @@
 package com.github.zxl0714.redismock;
 
-import com.github.zxl0714.redismock.expecptions.WrongNumberOfArgumentsException;
-import com.google.common.collect.Lists;
-import org.junit.Test;
+import com.github.zxl0714.redismock.server.Slice;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /**
  * Created by Xiaolu on 2015/4/20.
@@ -17,16 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class TestUtils {
 
     @Test
-    public void testAvailableCommands() {
-        System.out.println(CommandExecutor.getSupportedCommands());
-    }
-
-    @Test
-    public void testCloseQuietly() throws IOException {
+    public void testCloseQuietly() {
         Utils.closeQuietly(null);
         Utils.closeQuietly(new InputStream() {
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return 0;
             }
 
@@ -37,52 +29,10 @@ public class TestUtils {
         });
     }
 
-    @Test
-    public void testCheckArgumentsNumberEquals() throws WrongNumberOfArgumentsException {
-        List<Slice> args = Lists.newArrayList(new Slice(""), new Slice(""));
-        Utils.checkArgumentsNumberEquals(args, 2);
-        try {
-            Utils.checkArgumentsNumberEquals(args, 1);
-            assertTrue(false);
-        } catch (WrongNumberOfArgumentsException e) {
-            // ok
-        }
-        try {
-            Utils.checkArgumentsNumberEquals(args, 3);
-            assertTrue(false);
-        } catch (WrongNumberOfArgumentsException e) {
-            // ok
-        }
-    }
 
     @Test
-    public void testCheckArgumentsNumberGreater() throws WrongNumberOfArgumentsException {
-        List<Slice> args = Lists.newArrayList(new Slice(""), new Slice(""));
-        Utils.checkArgumentsNumberGreater(args, 1);
-        try {
-            Utils.checkArgumentsNumberGreater(args, 2);
-            assertTrue(false);
-        } catch (WrongNumberOfArgumentsException e) {
-            // ok
-        }
-    }
-
-    @Test
-    public void testCheckArgumentsNumberFactor() throws WrongNumberOfArgumentsException {
-        List<Slice> args = Lists.newArrayList(new Slice(""), new Slice(""), new Slice(""));
-        Utils.checkArgumentsNumberFactor(args, 1);
-        Utils.checkArgumentsNumberFactor(args, 3);
-        try {
-            Utils.checkArgumentsNumberFactor(args, 2);
-            assertTrue(false);
-        } catch (WrongNumberOfArgumentsException e) {
-            // ok
-        }
-    }
-
-    @Test
-    public void testSerializeAndDeserialize() throws Exception {
-        Slice a = new Slice("abcdef");
+    public void testSerializeAndDeserialize() {
+        Slice a = Slice.create("abcdef");
         Slice b = Utils.deserializeObject(Utils.serializeObject(a));
         assertArrayEquals(a.data(), b.data());
     }

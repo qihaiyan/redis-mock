@@ -1,13 +1,14 @@
 package com.github.zxl0714.redismock;
 
-import org.junit.Test;
-import redis.clients.jedis.*;
+import org.junit.jupiter.api.Test;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created by Xiaolu on 2015/4/21.
@@ -46,7 +47,7 @@ public class TestJedisConnect {
     public void testLpush() throws IOException {
         RedisServer server = RedisServer.newRedisServer();
         server.start();
-        Jedis jedis = new Jedis(server.getHost(), server.getBindPort());
+        Jedis jedis = new Jedis(server.getHost(), server.getBindPort(), 10000000);
         assertEquals(1, (long) jedis.lpush("list", "world"));
         assertEquals(2, (long) jedis.lpush("list", "hello"));
         assertEquals(3, (long) jedis.rpush("list", "!"));
